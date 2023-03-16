@@ -1,49 +1,53 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/alejandrodelarubiam/project-ml-microservice-kubernetes/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/alejandrodelarubiam/project-ml-microservice-kubernetes/tree/master)
-## Project Overview
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+## Summary of the Project
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+In this project, a Machine Learning Microservice API -Python flask app- will be operationalized, this model is trained to predict housing prices in Boston according to several features.
 
-### Project Tasks
+In this project the following instructions have been performed:
 
-Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
-* Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+* Using Hadolint and Pylint to test your project code.
+* Application will be containerized and deployed using Dockerfile and scripts containing Docker commands.
+* Make a prediction in the app containerized by Docker.
+* Adding in the app.py code log statements of prediction's output.
+* Installing Kubernetes and creating a local (i.e Minikube) or Cloud Provider (i.e EKS)
+* Writting a script which deploys a Kubernetes container of the app and making a prediction.
+* Uploading all the content in a public GitHub repo, running a CircleCI successful pipeline.
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+## Instructions: How to run the Python scripts and web app 
 
-**The final implementation of the project will showcase your abilities to operationalize production microservices.**
-
----
-
-## Setup the Environment
-
-* Create a virtualenv with Python 3.7 and activate it. Refer to this link for help on specifying the Python version in the virtualenv. 
+* First, a virtualenv with Python 3.7 needs to be created and activated, then all the dependencies must be installed using the Makefile.
 ```bash
 python3 -m pip install --user virtualenv
-# You should have Python 3.7 available in your host. 
-# Check the Python path using `which python3`
-# Use a command similar to this one:
 python3 -m virtualenv --python=<path-to-Python3.7> .devops
 source .devops/bin/activate
+make install
 ```
-* Run `make install` to install the necessary dependencies
-
-### Running `app.py`
+### Different ways of running the Flask application:
 
 1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./run_kubernetes.sh`
+2. Docker:  `./run_docker.sh`
+3. Kubernetes:  `./run_kubernetes.sh`
 
-### Kubernetes Steps
+### Docker and Kubernetes Steps
 
-* Setup and Configure Docker locally
-* Setup and Configure Kubernetes locally
-* Create Flask app in Container
-* Run via kubectl
+* Setup and Configure Docker locally, using [official Docker documentation](https://docs.docker.com/engine/install/).
+* Setup and Configure [Kubernetes](https://kubernetes.io/releases/download/#kubectl) as well as a tool which can create a Kubernetes cluster locally (i.e [Kind, kubeadm or minikube](https://kubernetes.io/docs/tasks/tools/)).
+* By running `./run_docker.sh` we will have our application in a local Docker container.
+* By running `./run_kubernetes.sh` we will have our application in a local Kubernetes pod in a local cluster.
+
+### Explanation of the files in the repository.
+
+* .circleci folder and .circleci/config.yml file: needed for performing CircleCI integration of our app.
+* Dockerfile: it creates a working directory, copies the files on it, install dependencies, exposes ports and run app.py on container.
+* Makefile: It creates and activates a virtual environment, install dependencies, and performs hadolint and pylint.
+* app.py: Core of application, it has been edited adding a log output of the prediction result.
+* make_prediction.sh: Script which makes a POST request, with an included payload.
+* ./run_docker.sh: It builds an image with a descriptive tag, lists docker images, run flask app and list containers.
+* ./upload_docker.sh: Tags and uploads an image to Docker Hub.
+* ./run_kubernetes.sh: It runs provided Docker Image on Kubernetes, lists pods and forwards container port to host.
+* output_txt_files/docker_out.txt: Log output of the application being run in Docker Container.
+* output_txt_files/kubernetes_out.txt: Log output of application, port-forwarding and pod status.
+* CUSTOMIZED FILES:
+* * LoadTest_Demo_Alejandrodelarubia.mp4: Demo video of a load test with Locust in the app, testing HPA scale up and down.
+* * RUBRIC_EVIDENCES folder: Folder with screenshots of each of the points required in project's rubric to ease the review task.
